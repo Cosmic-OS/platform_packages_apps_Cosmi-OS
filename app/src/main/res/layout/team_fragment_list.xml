@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        app:cardElevation="4dp"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_weight="0.5"
+            android:id="@+id/picture_bg">
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/dev_image"
+                android:layout_width="164dp"
+                android:layout_height="164dp"
+                android:src="@drawable/ic_cosmic_banner"
+                android:layout_gravity="center_horizontal"
+                app:civ_border="true"
+                app:civ_shadow="true"
+                app:civ_border_color="@color/colorPrimaryDark"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dev_name"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dev_disc"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/github"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:contentDescription="@string/github"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_github"
+                     />
+
+                <ImageView
+                    android:id="@+id/thread"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:contentDescription="@string/thread"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_thread" />
+
+                <ImageView
+                    android:id="@+id/telegram"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:contentDescription="@string/telegram"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_telegram" />
+            </LinearLayout>
+        </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
