@@ -74,7 +74,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.ViewHolder> {
             }
         });
         if (!Objects.equals(teamData.thread, "null")) {
-
+            holder.thread.setVisibility(View.VISIBLE);
             holder.thread.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
