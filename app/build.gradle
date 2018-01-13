@@ -6,9 +6,14 @@ android {
         applicationId "org.os.cosmic_os"
         minSdkVersion 23
         targetSdkVersion 27
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                outputFileName = "Cosmic-OS.apk"
+            }
+        }
     }
     buildTypes {
         release {

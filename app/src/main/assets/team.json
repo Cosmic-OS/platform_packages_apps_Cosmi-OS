@@ -28,6 +28,15 @@
       "telegram" : "https://t.me/NicoFranke"
     },
     {
+      "developerName": "Sebastian",
+      "github": "https://github.com/Felvesthe",
+      "description": "Developer | Maintainer / Gemini",
+      "image": "https://raw.githubusercontent.com/Cosmic-OS/cosmic_members/master/sebastian.jpg",
+      "bg_color": "#D81B60",
+      "thread": "null",
+      "telegram" : "https://t.me/Dzienny"
+    },
+    {
       "developerName": "zeromod",
       "github": "http://www.github.com/zeromod",
       "description": "Contributor / App developer",
@@ -69,7 +78,7 @@
       "description": "Maintainer / Sanders",
       "image": "https://raw.githubusercontent.com/Cosmic-OS/cosmic_members/master/keertesh.jpg",
       "bg_color": "#FFB300",
-      "thread": "null",
+      "thread": "https://forum.xda-developers.com/moto-g5s-plus/development/rom-cosmic-os-v3-1-universe-t3730716",
       "telegram" : "https://t.me/keertesh19"
     },
     {
@@ -143,16 +152,6 @@
       "bg_color": "#FFB300",
       "thread": "https://forum.xda-developers.com/redmi-note-3/development/rom-cosmic-os-v1-1-t3508637",
       "telegram" : "https://t.me/rocknegi69"
-    },
-
-    {
-      "developerName": "Sebastian",
-      "github": "https://github.com/Felvesthe",
-      "description": "Maintainer / Mi 5",
-      "image": "https://raw.githubusercontent.com/Cosmic-OS/cosmic_members/master/sebastian.jpg",
-      "bg_color": "#FFB300",
-      "thread": "null",
-      "telegram" : "https://t.me/Dzienny"
     },
     {
       "developerName": "Zjrdroid",
