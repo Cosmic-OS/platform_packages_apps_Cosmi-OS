@@ -6,8 +6,8 @@ android {
         applicationId "org.os.cosmic_os"
         minSdkVersion 23
         targetSdkVersion 27
-        versionCode 5
-        versionName "2.0"
+        versionCode 6
+        versionName "2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         android.applicationVariants.all { variant ->
             variant.outputs.all {

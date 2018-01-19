@@ -1,7 +1,9 @@
 package org.os.cosmic_os;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +17,13 @@ import android.view.View;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationViewPager;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
     AHBottomNavigationViewPager ahBottomNavigationViewPager;
     FloatingActionButton g_fab;
     int[] tabColors;
-
+    String url = "https://raw.githubusercontent.com/Cosmic-OS/platform_vendor_cos/oreo-mr1/team.json";
+    String cosmicG = "https://plus.google.com/communities/116339021564888810193";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +42,15 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         g_fab = findViewById(R.id.g_fab);
+
+        //Download the json file from repo
+        final DownloadTask downloadTask = new DownloadTask(this);
+        downloadTask.execute(url);
+
+        initUI();
+    }
+
+    private void initUI() {
         //setup the AHViewPager
         ahBottomNavigationViewPager = findViewById(R.id.viewPager);
         ahBottomNavigationViewPager.setAdapter(new MyPageAdapter(getSupportFragmentManager()));
@@ -51,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent gplusIntent = new Intent(Intent.ACTION_VIEW);
-                gplusIntent.setData(Uri.parse("https://plus.google.com/communities/116339021564888810193"));
+                gplusIntent.setData(Uri.parse(cosmicG));
                 startActivity(gplusIntent);
             }
         });
@@ -87,6 +106,41 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             return 4;
+        }
+
+    }
+
+    public static class DownloadTask extends AsyncTask<String, Integer, String> {
+        String file;
+        DownloadTask(Context getContext) {
+            file = getContext.getExternalFilesDir(null)+"/"+"team.json";
+        }
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+            InputStream inputStream;
+            OutputStream outputStream;
+            HttpURLConnection httpURLConnection;
+            try {
+                URL url = new URL(strings[0]);
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection.connect();
+                if (httpURLConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    return "Server returned HTTP " + httpURLConnection.getResponseCode()
+                            + " " + httpURLConnection.getResponseMessage();
+                }
+                inputStream = httpURLConnection.getInputStream();
+                outputStream = new FileOutputStream(new File(file));
+                byte data[] = new byte[4096];
+                int count;
+                while ((count = inputStream.read(data)) != -1) {
+                    outputStream.write(data, 0, count);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
 
     }
