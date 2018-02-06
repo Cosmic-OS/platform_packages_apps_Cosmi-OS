@@ -1,17 +1,30 @@
 package org.os.cosmic_os;
 
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
+import java.net.URL;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 
 public class HomeFragment extends Fragment {
@@ -21,7 +34,10 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-    TextView cosmicVersion;
+    TextView cosmicVersion, cosmicFeaturesText;
+    CardView cosmicFeatures;
+    ImageView arrows;
+    String Url = "https://raw.githubusercontent.com/Cosmic-OS/platform_vendor_ota/oreo-mr1/bacon.xml";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -29,6 +45,24 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         cosmicVersion = view.findViewById(R.id.cosmic_version);
+        cosmicFeatures = view.findViewById(R.id.cosmic_features);
+        cosmicFeaturesText = view.findViewById(R.id.cosmic_features_text);
+        arrows = view.findViewById(R.id.arrows);
+        cosmicFeatures.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cosmicFeaturesText.getVisibility() == View.VISIBLE)
+                {
+                    cosmicFeaturesText.setVisibility(View.GONE);
+                    arrows.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
+                }
+                else
+                {
+                    cosmicFeaturesText.setVisibility(View.VISIBLE);
+                    arrows.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                }
+            }
+        });
 
         try {
             Process process = Runtime.getRuntime().exec("/system/bin/getprop ro.cos.version");
@@ -40,34 +74,42 @@ public class HomeFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//
-//        StrictMode.setThreadPolicy(policy);
-//
-//        try {
-//            // Create a URL for the desired page
-//            URL url = new URL("https://raw.githubusercontent.com/Cosmic-OS/platform_vendor_cos/oreo/common.mk");
-//
-//            // Read all the text returned by the server
-//            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-//            String str;
-//            while ((str = in.readLine()) != null) {
-//                // str is one line of text; readLine() strips the newline character(s)
-//                int found = str.indexOf("COS_VERSION_NUMBER :=");
-//                if(found >=0)
-//                {
-//                    cosmicVersion.setText(str.substring(str.lastIndexOf("=")+1));
-//                }
-//            }
-//            in.close();
-//        } catch (IOException ignored) {
-//        }
-
+        XMLParser xmlParser = new XMLParser();
+        xmlParser.execute(Url);
         return view;
     }
+
     public static HomeFragment newInstance() {
 
         return new HomeFragment();
     }
 
+    public static class XMLParser extends AsyncTask<String, Integer, String> {
+        NodeList nodeList;
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                URL url = new URL(strings[0]);
+                DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+                Document document = documentBuilder.parse(new InputSource(url.openStream()));
+                document.getDocumentElement().normalize();
+                nodeList = document.getElementsByTagName("ROM");
+            } catch (ParserConfigurationException | SAXException | IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Node node = nodeList.item(0);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element element = (Element) node;
+                NodeList nodeList = element.getElementsByTagName("VersionNumber").item(0).getChildNodes();
+                Node node1 = nodeList.item(0);
+                //Log.e("zeromod",node1.getNodeValue());
+            }
+        }
+    }
 }
