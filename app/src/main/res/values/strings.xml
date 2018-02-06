@@ -83,4 +83,6 @@
 \n
 And last but not the least, the Galaxy to #ExploreTheCosmos !</string>
     <string name="paypal">paypal</string>
+    <string name="cosmic_os">Cosmic OS</string>
+    <string name="appbar_icon">appbar_icon</string>
 </resources>

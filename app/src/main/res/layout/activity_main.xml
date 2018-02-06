@@ -11,18 +11,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/status_bar_dimen" />
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:layout_height="48dp"
+            android:background="@android:color/white"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:layout_scrollFlags="scroll|enterAlways"
-            />
+            >
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_cosmic"
+                android:tint="@color/colorPrimary"
+                android:layout_marginEnd="2dp"
+                android:contentDescription="@string/appbar_icon" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cosmic_os"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"/>
+        </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
 
@@ -42,12 +54,15 @@
             android:src="@drawable/ic_gplus"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="64dp"
-            android:layout_marginEnd="24dp"/>
+            android:layout_marginEnd="24dp"
+            app:elevation="8dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"/>
+        android:layout_gravity="bottom"
+        />
 
     </android.support.design.widget.CoordinatorLayout>
 

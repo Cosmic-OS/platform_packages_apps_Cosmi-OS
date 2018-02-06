@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     AHBottomNavigationAdapter ahBottomNavigationAdapter;
     AHBottomNavigationViewPager ahBottomNavigationViewPager;
     FloatingActionButton g_fab;
-    int[] tabColors;
     String url = "https://raw.githubusercontent.com/Cosmic-OS/platform_vendor_cos/oreo-mr1/team.json";
     String cosmicG = "https://plus.google.com/communities/116339021564888810193";
     @Override
@@ -40,13 +39,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        if (getSupportActionBar() != null)getSupportActionBar().setDisplayShowTitleEnabled(false);
         g_fab = findViewById(R.id.g_fab);
-
         //Download the json file from repo
         final DownloadTask downloadTask = new DownloadTask(this);
         downloadTask.execute(url);
-
         initUI();
     }
 
@@ -58,12 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
         //setup the bottom navigation tab
         ahBottomNavigation = findViewById(R.id.bottom_navigation);
-        ahBottomNavigationAdapter =
-                new AHBottomNavigationAdapter(this,R.menu.bottom_bar_menu);
-        tabColors = getApplicationContext().getResources().getIntArray(R.array.tab_colors);
-        ahBottomNavigationAdapter.setupWithBottomNavigation(ahBottomNavigation,tabColors);
-        ahBottomNavigation.setColored(true);
-        ahBottomNavigation.setTranslucentNavigationEnabled(true);
+        ahBottomNavigationAdapter = new AHBottomNavigationAdapter(this,R.menu.bottom_bar_menu);
+        ahBottomNavigationAdapter.setupWithBottomNavigation(ahBottomNavigation);
         ahBottomNavigation.setBehaviorTranslationEnabled(true);
         ahBottomNavigation.manageFloatingActionButtonBehavior(g_fab);
         g_fab.setOnClickListener(new View.OnClickListener() {
@@ -77,12 +70,12 @@ public class MainActivity extends AppCompatActivity {
         ahBottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
-                if(!wasSelected)
-                    ahBottomNavigationViewPager.setCurrentItem(position);
+                if(!wasSelected)ahBottomNavigationViewPager.setCurrentItem(position);
+                if (position == 2)g_fab.setVisibility(View.INVISIBLE);
+                else g_fab.setVisibility(View.VISIBLE);
                 return true;
             }
         });
-
     }
 
     public class MyPageAdapter extends FragmentStatePagerAdapter {
@@ -107,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         public int getCount() {
             return 4;
         }
-
     }
 
     public static class DownloadTask extends AsyncTask<String, Integer, String> {
@@ -115,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
         DownloadTask(Context getContext) {
             file = getContext.getExternalFilesDir(null)+"/"+"team.json";
         }
-
 
         @Override
         protected String doInBackground(String... strings) {
@@ -142,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
-
     }
 
     //FadeOut and FadeIn animation for ViewPager
@@ -163,5 +153,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 }
