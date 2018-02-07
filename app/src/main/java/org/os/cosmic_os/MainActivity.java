@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTabSelected(int position, boolean wasSelected) {
                 if(!wasSelected)ahBottomNavigationViewPager.setCurrentItem(position);
-                if (position == 2)g_fab.setVisibility(View.INVISIBLE);
-                else g_fab.setVisibility(View.VISIBLE);
+                if (position == 3)g_fab.setVisibility(View.VISIBLE);
+                else g_fab.setVisibility(View.GONE);
                 return true;
             }
         });
