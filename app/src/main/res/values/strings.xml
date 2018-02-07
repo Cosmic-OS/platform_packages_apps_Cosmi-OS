@@ -87,4 +87,7 @@ And last but not the least, the Galaxy to #ExploreTheCosmos !</string>
     <string name="appbar_icon">appbar_icon</string>
     <string name="cosmic_features_header">Galaxy</string>
     <string name="features_info">features info</string>
+    <string name="checking_for_update">Checking for update</string>
+    <string name="download">Download</string>
+    <string name="update_available">Update available</string>
 </resources>
