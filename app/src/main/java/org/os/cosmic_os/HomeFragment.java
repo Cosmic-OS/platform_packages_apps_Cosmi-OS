@@ -35,9 +35,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-
 public class HomeFragment extends Fragment {
-
 
     public HomeFragment() {
         // Required empty public constructor
@@ -62,7 +60,7 @@ public class HomeFragment extends Fragment {
         updateChangelog = view.findViewById(R.id.changelog_new);
         updateDownload = view.findViewById(R.id.download_update);
         arrows = view.findViewById(R.id.arrows);
-        downloadManager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+        if (getContext() != null) { downloadManager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE); }
         cosmicFeatures.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

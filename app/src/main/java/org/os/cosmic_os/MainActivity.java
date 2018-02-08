@@ -1,5 +1,8 @@
 package org.os.cosmic_os;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -45,6 +48,13 @@ public class MainActivity extends AppCompatActivity {
         final DownloadTask downloadTask = new DownloadTask(this);
         downloadTask.execute(url);
         initUI();
+        OTAJobScheduler();
+    }
+
+    private void OTAJobScheduler() {
+        JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        assert jobScheduler != null;
+        jobScheduler.schedule(new JobInfo.Builder(0,new ComponentName(this,OTAService.class)).setPeriodic(15*60*1000).build());
     }
 
     private void initUI() {
