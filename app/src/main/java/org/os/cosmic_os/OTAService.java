@@ -40,7 +40,6 @@ public class OTAService extends JobService {
             serverNodes = xmlParser.execute(Url+device+".xml").get();
 
             if (!localVersion.equals(serverNodes[0])) {
-                Log.e("zeromod","OTA Update Available");
                 int notifyID = 1;
                 String CHANNEL_ID = "my_channel_01";// The id of the channel.
                 CharSequence name = "Cosmic Update";// The user-visible name of the channel.

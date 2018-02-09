@@ -90,4 +90,9 @@ And last but not the least, the Galaxy to #ExploreTheCosmos !</string>
     <string name="checking_for_update">Your system is up-to-date</string>
     <string name="download">Download</string>
     <string name="update_available">Update available</string>
+    <string name="auto_check_intervals">Auto Check Intervals</string>
+    <string name="_4_hours">4 Hours</string>
+    <string name="_8_hours">8 Hours</string>
+    <string name="_12_hours">12 Hours</string>
+    <string name="_24_hours">24 Hours</string>
 </resources>

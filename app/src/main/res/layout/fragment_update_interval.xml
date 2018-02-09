@@ -1,0 +1,46 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="org.os.cosmic_os.UpdateIntervalFragment"
+    android:layout_margin="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/auto_check_intervals"
+        android:layout_margin="16dp"
+        android:textStyle="bold"
+        android:textSize="18sp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/interval_4"
+        android:layout_margin="16dp"
+        android:textSize="16sp"
+        android:text="@string/_4_hours"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/interval_8"
+        android:layout_margin="16dp"
+        android:textSize="16sp"
+        android:text="@string/_8_hours"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/interval_12"
+        android:layout_margin="16dp"
+        android:textSize="16sp"
+        android:text="@string/_12_hours"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/interval_24"
+        android:layout_margin="16dp"
+        android:textSize="16sp"
+        android:text="@string/_24_hours"/>
+
+</LinearLayout>

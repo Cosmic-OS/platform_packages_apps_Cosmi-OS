@@ -1,14 +1,18 @@
 package org.os.cosmic_os;
 
+import android.annotation.SuppressLint;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,7 +20,12 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationViewPager;
@@ -36,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton g_fab;
     String url = "https://raw.githubusercontent.com/Cosmic-OS/platform_vendor_cos/oreo-mr1/team.json";
     String cosmicG = "https://plus.google.com/communities/116339021564888810193";
+    int intervals= 86400000; //24 hours
+    JobScheduler jobScheduler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,13 +59,21 @@ public class MainActivity extends AppCompatActivity {
         final DownloadTask downloadTask = new DownloadTask(this);
         downloadTask.execute(url);
         initUI();
-        OTAJobScheduler();
+        jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!sharedPreferences.getBoolean("firstTime",false))
+        {
+            OTAJobScheduler();
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("firstTime",true);
+            editor.apply();
+        }
     }
 
     private void OTAJobScheduler() {
-        JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
         assert jobScheduler != null;
-        jobScheduler.schedule(new JobInfo.Builder(0,new ComponentName(this,OTAService.class)).setPeriodic(15*60*1000).build());
+        jobScheduler.schedule(new JobInfo.Builder(0,new ComponentName(this,OTAService.class)).setPeriodic(intervals).build());
     }
 
     private void initUI() {
@@ -86,6 +105,72 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            @SuppressLint("InflateParams") View view = getLayoutInflater().inflate(R.layout.fragment_update_interval, null);
+
+            final BottomSheetDialog dialog = new BottomSheetDialog(this);
+            dialog.setContentView(view);
+            dialog.show();
+
+            TextView update4hours = view.findViewById(R.id.interval_4);
+            update4hours.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    intervals=14400000;
+                    jobScheduler.cancel(0);
+                    jobScheduler.schedule(new JobInfo.Builder(0,new ComponentName(getApplicationContext(),OTAService.class)).setPeriodic(intervals).build());
+                    dialog.dismiss();
+                    Toast.makeText(getApplicationContext(),"Check interval set to 4 Hours",Toast.LENGTH_LONG).show();
+                }
+            });
+            TextView update8hours = view.findViewById(R.id.interval_8);
+            update8hours.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    intervals=28800000;
+                    jobScheduler.cancel(0);
+                    jobScheduler.schedule(new JobInfo.Builder(0,new ComponentName(getApplicationContext(),OTAService.class)).setPeriodic(intervals).build());
+                    dialog.dismiss();
+                    Toast.makeText(getApplicationContext(),"Check interval set to 8 Hours",Toast.LENGTH_LONG).show();
+                }
+            });
+            TextView update12hours = view.findViewById(R.id.interval_12);
+            update12hours.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    intervals=43200000;
+                    jobScheduler.cancel(0);
+                    jobScheduler.schedule(new JobInfo.Builder(0,new ComponentName(getApplicationContext(),OTAService.class)).setPeriodic(intervals).build());
+                    dialog.dismiss();
+                    Toast.makeText(getApplicationContext(),"Check interval set to 12 Hours",Toast.LENGTH_LONG).show();
+                }
+            });
+            TextView update24hours = view.findViewById(R.id.interval_24);
+            update24hours.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    intervals=86400000;
+                    jobScheduler.cancel(0);
+                    jobScheduler.schedule(new JobInfo.Builder(0,new ComponentName(getApplicationContext(),OTAService.class)).setPeriodic(intervals).build());
+                    dialog.dismiss();
+                    Toast.makeText(getApplicationContext(),"Check interval set to 24 Hours",Toast.LENGTH_LONG).show();
+                }
+            });
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public class MyPageAdapter extends FragmentStatePagerAdapter {
