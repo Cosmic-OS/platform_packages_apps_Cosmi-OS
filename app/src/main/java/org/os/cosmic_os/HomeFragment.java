@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -98,7 +99,7 @@ public class HomeFragment extends Fragment {
             XMLParser xmlParser = new XMLParser();
             serverNodes = xmlParser.execute(Url+device+".xml").get();
 
-            if (!localVersion.equals(serverNodes[0])) {
+            if (!localVersion.equals(serverNodes[0]) && serverNodes[0] != null) {
                 updateCheck.setText(String.format("%s %s", getString(R.string.update_available), serverNodes[0]));
                 updateChangelog.setVisibility(View.VISIBLE);
                 updateChangelog.setOnClickListener(new View.OnClickListener() {
@@ -131,6 +132,7 @@ public class HomeFragment extends Fragment {
                             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                             request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "/Cosmic Update/" + "/" + serverNodes[0] + ".zip");
                             downloadManager.enqueue(request);
+                            Snackbar.make(getActivity().findViewById(R.id.home_main),"Location: Downloads/Comsic Update/",Snackbar.LENGTH_LONG).show();
                         }
                     }
                 });

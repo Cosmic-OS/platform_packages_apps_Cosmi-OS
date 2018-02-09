@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,7 +38,7 @@ public class OTAService extends JobService {
             HomeFragment.XMLParser xmlParser = new HomeFragment.XMLParser();
             serverNodes = xmlParser.execute(Url+device+".xml").get();
 
-            if (!localVersion.equals(serverNodes[0])) {
+            if (!localVersion.equals(serverNodes[0]) && serverNodes[0] != null) {
                 int notifyID = 1;
                 String CHANNEL_ID = "my_channel_01";// The id of the channel.
                 CharSequence name = "Cosmic Update";// The user-visible name of the channel.
@@ -73,7 +72,6 @@ public class OTAService extends JobService {
                 notification.setContentIntent(resultPendingIntent);
                 mNotificationManager.notify(notifyID , notification.build());
             }
-            else Log.e("zeromod","NO updates");
             jobFinished(params,false);
         } catch (IOException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
