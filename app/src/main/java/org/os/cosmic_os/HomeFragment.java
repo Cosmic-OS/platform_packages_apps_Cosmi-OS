@@ -45,8 +45,9 @@ public class HomeFragment extends Fragment {
     TextView cosmicVersion, cosmicFeaturesText, updateCheck, updateChangelog, updateDownload;
     CardView cosmicFeatures;
     ImageView arrows;
-    String Url = "https://raw.githubusercontent.com/Cosmic-OS/platform_vendor_ota/oreo-mr1/";
+    String Url = "https://raw.githubusercontent.com/Cosmic-OS/platform_vendor_ota/pulsar-release/";
     String[] serverNodes;
+    static String features;
     DownloadManager downloadManager;
 
     @Override
@@ -61,23 +62,9 @@ public class HomeFragment extends Fragment {
         updateChangelog = view.findViewById(R.id.changelog_new);
         updateDownload = view.findViewById(R.id.download_update);
         arrows = view.findViewById(R.id.arrows);
-        if (getContext() != null) { downloadManager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE); }
-        cosmicFeatures.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cosmicFeaturesText.getVisibility() == View.VISIBLE)
-                {
-                    cosmicFeaturesText.setVisibility(View.GONE);
-                    arrows.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
-                }
-                else
-                {
-                    cosmicFeaturesText.setVisibility(View.VISIBLE);
-                    arrows.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
-                }
-            }
-        });
-
+        if (getContext() != null) {
+            downloadManager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+        }
         try {
             Process process = Runtime.getRuntime().exec("/system/bin/getprop ro.cos.version");
             InputStream stdin = process.getInputStream();
@@ -96,8 +83,13 @@ public class HomeFragment extends Fragment {
             isr = new InputStreamReader(stdin);
             br = new BufferedReader(isr);
             String device = br.readLine();
+
+            FeatureList featureList = new FeatureList();
+            features = featureList.execute("https://raw.githubusercontent.com/Cosmic-OS/platform_vendor_cos/pulsar-release/FeaturesList.txt").get();
+            cosmicFeaturesText.setText(features);
+
             XMLParser xmlParser = new XMLParser();
-            serverNodes = xmlParser.execute(Url+device+".xml").get();
+            serverNodes = xmlParser.execute(Url + device + ".xml").get();
 
             if (!localVersion.equals(serverNodes[0]) && serverNodes[0] != null) {
                 updateCheck.setText(String.format("%s %s", getString(R.string.update_available), serverNodes[0]));
@@ -105,7 +97,7 @@ public class HomeFragment extends Fragment {
                 updateChangelog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),android.R.style.Theme_Material_Light_Dialog);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Light_Dialog);
                         builder.setTitle("New Changelog")
                                 .setMessage(serverNodes[1])
                                 .show();
@@ -118,8 +110,8 @@ public class HomeFragment extends Fragment {
 
                         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                             if (getActivity() != null)
-                            ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                                ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
                             ActivityCompat.requestPermissions(getActivity(),
                                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                     0);
@@ -132,7 +124,8 @@ public class HomeFragment extends Fragment {
                             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
                             request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "/Cosmic Update/" + "/" + serverNodes[0] + ".zip");
                             downloadManager.enqueue(request);
-                            Snackbar.make(getActivity().findViewById(R.id.home_main),"Location: Downloads/Comsic Update/",Snackbar.LENGTH_LONG).show();
+                            if (getActivity() != null)
+                                Snackbar.make(getActivity().findViewById(R.id.home_main), "Location: Downloads/Comsic Update/", Snackbar.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -140,12 +133,50 @@ public class HomeFragment extends Fragment {
         } catch (IOException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
+        cosmicFeatures.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cosmicFeaturesText.getVisibility() == View.VISIBLE)
+                {
+                    cosmicFeaturesText.setVisibility(View.GONE);
+                    arrows.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
+                }
+                else
+                {
+                    cosmicFeaturesText.setVisibility(View.VISIBLE);
+                    arrows.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                }
+            }
+        });
         return view;
     }
 
     public static HomeFragment newInstance() {
 
         return new HomeFragment();
+    }
+
+    public static class FeatureList extends AsyncTask<String,String,String>{
+        static String features = "",buffer;
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                URL url = new URL(strings[0]);
+                BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+                while ((buffer = in.readLine()) != null) {
+                    features = features.concat(buffer+"\n");
+                }
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return features;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
     }
 
     public static class XMLParser extends AsyncTask<String, Integer, String[]>{
